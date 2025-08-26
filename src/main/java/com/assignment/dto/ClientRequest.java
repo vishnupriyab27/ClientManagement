@@ -10,5 +10,5 @@ public record ClientRequest(
         @NotBlank @Email @Size(max = 100) String email,
         @Size(max = 500) String details,
         @Size(max = 255) String location,
-        Boolean status
+        Boolean active
 ) {}

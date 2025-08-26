@@ -13,5 +13,4 @@ public record ClientResponse(
         Boolean status,
         Instant createdAt,
         Instant updatedAt
-) {
-}
+) {}
