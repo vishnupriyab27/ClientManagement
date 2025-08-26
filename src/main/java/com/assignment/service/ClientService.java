@@ -4,6 +4,8 @@ import com.assignment.dto.ClientRequest;
 import com.assignment.dto.ClientResponse;
 import com.assignment.dto.PageResponse;
 import com.assignment.entity.Client;
+import com.assignment.exception.ConflictException;
+import com.assignment.exception.NotFoundException;
 import com.assignment.mapper.ClientMapper;
 import com.assignment.repository.ClientRepository;
 import org.springframework.data.domain.Page;
@@ -20,17 +22,17 @@ public class ClientService {
     private final ClientRepository repo;
     public ClientService(ClientRepository repo) { this.repo = repo; }
 
-    public ClientResponse create(ClientRequest req) throws Exception {
+    public ClientResponse create(ClientRequest req) {
         if (repo.existsByEmail(req.email())) {
-            throw new Exception("email already exists");
+            throw new ConflictException("email already exists");
         }
         Client c = ClientMapper.toEntity(req);
         return ClientMapper.toResponse(repo.save(c));
     }
 
     @Transactional(readOnly = true)
-    public ClientResponse get(UUID id) throws Exception {
-        Client c = repo.findById(id).orElseThrow(() -> new Exception("client not found"));
+    public ClientResponse get(UUID id) {
+        Client c = repo.findById(id).orElseThrow(() -> new NotFoundException("client not found"));
         return ClientMapper.toResponse(c);
     }
 
@@ -45,19 +47,19 @@ public class ClientService {
         );
     }
 
-    public ClientResponse update(UUID id, ClientRequest req) throws Exception {
-        Client c = repo.findById(id).orElseThrow(() -> new Exception("client not found"));
+    public ClientResponse update(UUID id, ClientRequest req) {
+        Client c = repo.findById(id).orElseThrow(() -> new NotFoundException("client not found"));
         if (!c.getEmail().equals(req.email()) && repo.existsByEmail(req.email())) {
-            throw new Exception("email already exists");
+            throw new ConflictException("email already exists");
         }
         ClientMapper.updateEntity(c, req);
         return ClientMapper.toResponse(c);
     }
 
-    public ClientResponse patch(UUID id, ClientRequest req) throws Exception { return update(id, req); }
+    public ClientResponse patch(UUID id, ClientRequest req) { return update(id, req); }
 
-    public void delete(UUID id) throws Exception {
-        if (!repo.existsById(id)) throw new Exception("client not found");
+    public void delete(UUID id) {
+        if (!repo.existsById(id)) throw new NotFoundException("client not found");
         repo.deleteById(id);
     }
 

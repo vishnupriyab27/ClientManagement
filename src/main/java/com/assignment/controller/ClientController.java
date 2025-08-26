@@ -22,11 +22,11 @@ public class ClientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a client")
-    public ClientResponse create(@Valid @RequestBody ClientRequest req) throws Exception { return service.create(req); }
+    public ClientResponse create(@Valid @RequestBody ClientRequest req) { return service.create(req); }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a client by id")
-    public ClientResponse get(@PathVariable UUID id) throws Exception { return service.get(id); }
+    public ClientResponse get(@PathVariable UUID id) { return service.get(id); }
 
     @GetMapping
     @Operation(summary = "List clients (paged)")
@@ -38,15 +38,15 @@ public class ClientController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a client (full)")
-    public ClientResponse update(@PathVariable UUID id, @Valid @RequestBody ClientRequest req) throws Exception { return service.update(id, req); }
+    public ClientResponse update(@PathVariable UUID id, @Valid @RequestBody ClientRequest req) { return service.update(id, req); }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update a client (partial)")
-    public ClientResponse patch(@PathVariable UUID id, @RequestBody ClientRequest req) throws Exception { return service.patch(id, req); }
+    public ClientResponse patch(@PathVariable UUID id, @RequestBody ClientRequest req) { return service.patch(id, req); }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a client")
-    public void delete(@PathVariable UUID id) throws Exception { service.delete(id); }
+    public void delete(@PathVariable UUID id) { service.delete(id); }
 
 }
