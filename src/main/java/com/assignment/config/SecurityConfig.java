@@ -2,7 +2,6 @@ package com.assignment.config;
 
 import com.assignment.dto.AppUser;
 import com.assignment.dto.AppUserWrapper;
-import com.assignment.dto.ClientsWrapper;
 import com.assignment.util.ResourceJsonReader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
