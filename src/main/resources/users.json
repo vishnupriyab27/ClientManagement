@@ -1,0 +1,22 @@
+{
+    "users": [
+        {
+            "fullName": "Sheila Cox",
+            "email": "sheila.cox@example.com",
+            "password": "sheilaC",
+            "role": "VIEWER"
+        },
+        {
+            "fullName": "Angel Hansen",
+            "email": "angel.hansen@example.com",
+            "password": "angelH",
+            "role": "EDITOR"
+        },
+        {
+            "fullName": "Michael Scott",
+            "email": "theWorldsBestBOSS@example.com",
+            "password": "michaelS",
+            "role": "ADMIN"
+        }
+    ]
+}
