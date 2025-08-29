@@ -1,16 +1,15 @@
 package com.assignment.dto;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public record ClientResponse(
-        UUID id,
-        String firstName,
-        String lastName,
+        Long id,
+        String fullName,
+        String displayName,
         String email,
-        String phone,
-        String address,
-        Boolean status,
+        String details,
+        String location,
+        Boolean active,
         Instant createdAt,
         Instant updatedAt
 ) {}
