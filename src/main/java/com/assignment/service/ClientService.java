@@ -2,19 +2,17 @@ package com.assignment.service;
 
 import com.assignment.dto.ClientRequest;
 import com.assignment.dto.ClientResponse;
-import com.assignment.dto.PageResponse;
 import com.assignment.entity.Client;
 import com.assignment.exception.ConflictException;
 import com.assignment.exception.NotFoundException;
 import com.assignment.mapper.ClientMapper;
 import com.assignment.repository.ClientRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -31,37 +29,60 @@ public class ClientService {
     }
 
     @Transactional(readOnly = true)
-    public ClientResponse get(UUID id) {
+    public ClientResponse get(Long id) {
         Client c = repo.findById(id).orElseThrow(() -> new NotFoundException("client not found"));
         return ClientMapper.toResponse(c);
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ClientResponse> list(int page, int size, String sort) {
-        Sort sortObj = sort == null ? Sort.by("fullName","displayName").ascending() : Sort.by(sort.split(","));
-        Page<Client> p = repo.findAll(PageRequest.of(page, size, sortObj));
-        return new PageResponse<>(
-                p.map(ClientMapper::toResponse).getContent(),
-                p.getNumber(), p.getSize(), p.getTotalElements(), p.getTotalPages(),
-                p.isFirst(), p.isLast()
-        );
+    public List<ClientResponse> getAll() {
+        List<Client> clients = repo.findAll();
+        return buildClientResponse(clients);
     }
 
-    public ClientResponse update(UUID id, ClientRequest req) {
+    @Transactional(readOnly = true)
+    public List<ClientResponse> getClients(String name, Long id, String sortBy, String direction) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction),
+                    sortBy != null ? sortBy : "id"
+                );
+
+        List<Client> clients;
+
+        if(id != null){
+            clients = repo.findById(id, sort);
+        } else if(name != null){
+            clients = repo.findByFullNameContaining(name, sort);
+        } else{
+            clients = repo.findAll(sort);
+        }
+
+        return buildClientResponse(clients);
+    }
+
+    public ClientResponse update(Long id, ClientRequest req) {
         Client c = repo.findById(id).orElseThrow(() -> new NotFoundException("client not found"));
         if (!c.getEmail().equals(req.email()) && repo.existsByEmail(req.email())) {
             throw new ConflictException("email already exists");
         }
         ClientMapper.updateEntity(c, req);
-        return ClientMapper.toResponse(c);
+        return ClientMapper.toResponse(repo.save(c));
     }
 
-    public ClientResponse patch(UUID id, ClientRequest req) { return update(id, req); }
+    public ClientResponse patch(Long id, ClientRequest req) { return update(id, req); }
 
-    public void delete(UUID id) {
+    public void delete(Long id) {
         if (!repo.existsById(id)) throw new NotFoundException("client not found");
         repo.deleteById(id);
     }
 
+    private List<ClientResponse> buildClientResponse(List<Client> clients) {
+        List<ClientResponse> res = new ArrayList<>();
+        if(clients != null && !clients.isEmpty()){
+            for (Client client : clients) {
+                res.add(ClientMapper.toResponse(client));
+            }
+        }
+        return res;
+    }
 
 }

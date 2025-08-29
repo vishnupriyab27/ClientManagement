@@ -2,7 +2,6 @@ package com.assignment.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "clients", uniqueConstraints = @UniqueConstraint(name = "clients_email", columnNames = "email"))
@@ -10,7 +9,7 @@ import java.util.UUID;
 public class Client {
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false)
     private String fullName;
@@ -36,11 +35,11 @@ public class Client {
     @PreUpdate
     public void onUpdate() { this.updatedAt = Instant.now(); }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
