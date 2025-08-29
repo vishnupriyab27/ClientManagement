@@ -1,0 +1,17 @@
+package com.assignment.config;
+
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class OpenAPIConfig {
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Client Management API").version("v1").description("CRUD API for clients"))
+                .externalDocs(new ExternalDocumentation().description("H2 console").url("/h2-console"));
+    }
+}
